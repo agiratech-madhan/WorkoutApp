@@ -14,6 +14,7 @@ class ExcerSizeActivity : AppCompatActivity() {
         if(supportActionBar!=null){
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        binding?.toolbarExcerSize?.setNavigationOnClickListener {  }
+        binding?.toolbarExcerSize?.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()        }
     }
 }
