@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding?.root)
         binding?.flStart?.setOnClickListener {
-          val intent= Intent(/* packageContext = */ this, /* cls = */ ExcerSizeActivity::class.java)
+            val intent= Intent(/* packageContext = */ this, /* cls = */ ExcerSizeActivity::class.java)
             startActivity(intent)
         }
     }
