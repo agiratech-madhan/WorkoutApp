@@ -34,7 +34,13 @@ class ExcerSizeActivity : AppCompatActivity() {
     }
 
     private fun setupRestView() {
-
+        binding?.flRestView?.visibility = View.VISIBLE
+        binding?.tvTitle?.visibility = View.VISIBLE
+        binding?.upcomingLabel?.visibility = View.VISIBLE
+        binding?.tvUpcomingExerciseName?.visibility = View.VISIBLE
+        binding?.tvExerciseName?.visibility = View.INVISIBLE
+        binding?.flExerciseView?.visibility = View.INVISIBLE
+        binding?.ivImage?.visibility = View.INVISIBLE
         /**
          * Here firstly we will check if the timer is running the and it is not null then cancel the running timer and start the new one.
          * And set the progress to initial which is 0.
@@ -43,6 +49,8 @@ class ExcerSizeActivity : AppCompatActivity() {
             restTimer!!.cancel()
             restProgress = 0
         }
+        binding?.tvUpcomingExerciseName?.text =
+            exerciseList!![currentExersizePosition + 1].getName()
 
         // This function is used to set the progress details.
         setRestProgressBar()
@@ -91,7 +99,7 @@ class ExcerSizeActivity : AppCompatActivity() {
         }
         binding?.ivImage?.setImageResource(exerciseList!![currentExersizePosition].getImage())
 
-        binding?.tvExerciseName?.text=exerciseList!![currentExersizePosition].getName()
+        binding?.tvExerciseName?.text = exerciseList!![currentExersizePosition].getName()
 
         setExerciseProgressBar()
     }
@@ -108,14 +116,14 @@ class ExcerSizeActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                if(currentExersizePosition<exerciseList?.size!!-1){
+                if (currentExersizePosition < exerciseList?.size!! - 1) {
                     setupRestView()
-                }else{
+                } else {
                     Toast.makeText(
-                    this@ExcerSizeActivity,
-                    "Congratulations! You have Completed 7 minutes Workout",
-                    Toast.LENGTH_SHORT
-                ).show()
+                        this@ExcerSizeActivity,
+                        "Congratulations! You have Completed 7 minutes Workout",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 //
             }
