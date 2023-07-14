@@ -20,6 +20,8 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restProgress = 0
     private var binding: ActivityExersizeBinding? = null
     private var exerciseTimer: CountDownTimer? = null
+    private var exerciseTimerDuration:Long = 30
+
     private var exerciseProgress = 0
     private var exerciseList: ArrayList<ExerciseModel>? = null
     private var currentExersizePosition = -1
@@ -105,6 +107,8 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 //                    this@ExcerSizeActivity, "The Message timer.", Toast.LENGTH_SHORT
 //                ).show()
                 currentExersizePosition++
+                exerciseList!![currentExersizePosition].setIsSelected(true)
+                exerciseAdapter!!.notifyDataSetChanged()
                 setupExerciseView()
             }
         }.start()
@@ -125,6 +129,7 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
          */
         if (exerciseTimer != null) {
             exerciseTimer?.cancel()
+            exerciseProgress = 0
         }
 
         speakOut(exerciseList!![currentExersizePosition].getName())
@@ -140,14 +145,18 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding?.progressBarExercise?.progress = exerciseProgress
 
-        exerciseTimer = object : CountDownTimer(30000, 1000) {
+        exerciseTimer = object : CountDownTimer(exerciseTimerDuration * 1000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 exerciseProgress++
-                binding?.progressBarExercise?.progress = 30 - exerciseProgress
-                binding?.tvTimerExercise?.text = (30 - exerciseProgress).toString()
+                binding?.progressBarExercise?.progress = exerciseTimerDuration.toInt() - exerciseProgress
+                binding?.tvTimerExercise?.text = (exerciseTimerDuration.toInt() - exerciseProgress).toString()
             }
 
             override fun onFinish() {
+
+                exerciseList!![currentExersizePosition].setIsSelected(false) // exercise is completed so selection is set to false
+                exerciseList!![currentExersizePosition].setIsCompleted(true) // updating in the list that this exercise is completed
+                exerciseAdapter!!.notifyDataSetChanged()
                 if (currentExersizePosition < exerciseList?.size!! - 1) {
                     setupRestView()
                 } else {
