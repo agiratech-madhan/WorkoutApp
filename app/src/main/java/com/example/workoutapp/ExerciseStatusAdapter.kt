@@ -28,8 +28,8 @@ class ExerciseStatusAdapter(val items: ArrayList<ExerciseModel>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-val model:ExerciseModel=items[position]
-    holder.tvItem.text=model.getId().toString()
+        val model: ExerciseModel = items[position]
+        holder.tvItem.text = model.getId().toString()
         when {
             model.getIsSelected() -> {
                 holder.tvItem.background =
@@ -41,12 +41,18 @@ val model:ExerciseModel=items[position]
             }
             model.getIsCompleted() -> {
                 holder.tvItem.background =
-                    ContextCompat.getDrawable(holder.itemView.context, R.drawable.item_circular_color_accent_background)
+                    ContextCompat.getDrawable(
+                        holder.itemView.context,
+                        R.drawable.item_circular_color_accent_background
+                    )
                 holder.tvItem.setTextColor(Color.parseColor("#FFFFFF"))
             }
             else -> {
                 holder.tvItem.background =
-                    ContextCompat.getDrawable(holder.itemView.context, R.drawable.item_circular_color_gray_background)
+                    ContextCompat.getDrawable(
+                        holder.itemView.context,
+                        R.drawable.item_circular_color_gray_background
+                    )
                 holder.tvItem.setTextColor(Color.parseColor("#212121"))
             }
         }

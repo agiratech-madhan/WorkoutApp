@@ -1,6 +1,6 @@
 package com.example.workoutapp
 
-//import com.example.workoutapp.databinding.ActivityExcerSizeBinding
+import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -39,11 +39,12 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
-        exerciseList = Constants.defaultExerciseList()
-
         binding?.toolbarExercise?.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        exerciseList = Constants.defaultExerciseList()
+
+
         setupRestView()
         setupExerciseStatusRecycleriew()
     }
@@ -96,7 +97,7 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             override fun onTick(millisUntilFinished: Long) {
                 restProgress++ // It is increased by 1
                 binding?.progressBar?.progress =
-                    10 - restProgress // Indicates progress bar progress
+                   10 - restProgress // Indicates progress bar progress
                 binding?.tvTimer?.text =
                     (10 - restProgress).toString()  // Current progress is set to text view in terms of seconds.
             }
@@ -123,21 +124,17 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         binding?.flExerciseView?.visibility = View.VISIBLE
         binding?.ivImage?.visibility = View.VISIBLE
 
-        /**
-         * Here firstly we will check if the timer is running and it is not null then cancel the running timer and start the new one.
-         * And set the progress to the initial value which is 0.
-         */
+
         if (exerciseTimer != null) {
             exerciseTimer?.cancel()
             exerciseProgress = 0
         }
-
         speakOut(exerciseList!![currentExersizePosition].getName())
-
         binding?.ivImage?.setImageResource(exerciseList!![currentExersizePosition].getImage())
-
         binding?.tvExerciseName?.text = exerciseList!![currentExersizePosition].getName()
-
+       if(currentExersizePosition<exerciseList!!.size-1){
+           binding?.tvUpcomingExerciseName?.text=exerciseList!![currentExersizePosition+1].getName()
+       }
         setExerciseProgressBar()
     }
 
@@ -154,17 +151,21 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             override fun onFinish() {
 
-                exerciseList!![currentExersizePosition].setIsSelected(false) // exercise is completed so selection is set to false
-                exerciseList!![currentExersizePosition].setIsCompleted(true) // updating in the list that this exercise is completed
-                exerciseAdapter!!.notifyDataSetChanged()
+               // updating in the list that this exercise is completed
                 if (currentExersizePosition < exerciseList?.size!! - 1) {
+                    exerciseList!![currentExersizePosition].setIsSelected(false) // exercise is completed so selection is set to false
+                    exerciseList!![currentExersizePosition].setIsCompleted(true)
+                    exerciseAdapter!!.notifyDataSetChanged()
+
                     setupRestView()
                 } else {
-                    Toast.makeText(
-                        this@ExcerSizeActivity,
-                        "Congratulations! You have Completed 7 minutes Workout",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val intent=Intent(this@ExcerSizeActivity, FinishActivity::class.java)
+                    startActivity(intent)
+//                    Toast.makeText(
+//                        this@ExcerSizeActivity,
+//                        "Congratulations! You have Completed 7 minutes Workout",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 }
 //
             }
