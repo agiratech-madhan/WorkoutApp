@@ -1,5 +1,8 @@
 package com.example.workoutapp
 
+//import com.example.workoutapp.databinding.ActivityExcerSizeBinding
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
@@ -7,10 +10,9 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-//import com.example.workoutapp.databinding.ActivityExcerSizeBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp.databinding.ActivityExersizeBinding
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var restTimer: CountDownTimer? =
@@ -22,6 +24,8 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var exerciseList: ArrayList<ExerciseModel>? = null
     private var currentExersizePosition = -1
     private var tts: TextToSpeech? = null
+    private var player: MediaPlayer? = null
+    private var exerciseAdapter: ExerciseStatusAdapter? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExersizeBinding.inflate(layoutInflater)
@@ -39,9 +43,27 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             onBackPressedDispatcher.onBackPressed()
         }
         setupRestView()
+        setupExerciseStatusRecycleriew()
+    }
+
+    private fun setupExerciseStatusRecycleriew() {
+        binding?.rvExerciseStatus?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!)
+        binding?.rvExerciseStatus?.adapter = exerciseAdapter
     }
 
     private fun setupRestView() {
+        try {
+            var soundUri =
+                Uri.parse("android.resource://com.example.workoutapp/" + R.raw.press_start)
+            player = MediaPlayer.create(applicationContext, soundUri)
+            player?.isLooping = false
+            player?.start()
+        } catch (e: Exception) {
+            e.printStackTrace()
+
+        }
         binding?.flRestView?.visibility = View.VISIBLE
         binding?.tvTitle?.visibility = View.VISIBLE
         binding?.upcomingLabel?.visibility = View.VISIBLE
@@ -150,6 +172,9 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             tts?.shutdown()
         }
         super.onDestroy()
+        if (player != null) {
+            player!!.stop()
+        }
         binding = null
     }
 
@@ -166,6 +191,7 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             Log.e("TTS", "Initialization Failed!")
         }
     }
+
     private fun speakOut(text: String) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
     }
