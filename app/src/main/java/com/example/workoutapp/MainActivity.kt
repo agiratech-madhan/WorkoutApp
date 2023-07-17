@@ -18,6 +18,11 @@ class MainActivity : AppCompatActivity() {
             val intent= Intent(/* packageContext = */ this, /* cls = */ ExcerSizeActivity::class.java)
             startActivity(intent)
         }
+        binding?.flBMI?.setOnClickListener {
+            // Launching the BMI Activity
+            val intent = Intent(this, BMIActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
 

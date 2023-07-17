@@ -1,5 +1,6 @@
 package com.example.workoutapp
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import android.net.Uri
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.workoutapp.databinding.ActivityExersizeBinding
+import com.example.workoutapp.databinding.DialogCustomBackConfirmationBinding
 import java.util.*
 
 class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
@@ -40,7 +42,10 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
         binding?.toolbarExercise?.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+//            onBackPressedDispatcher.onBackPressed()
+            print("Madhan")
+            customDialogForBackButton()
+
         }
         exerciseList = Constants.defaultExerciseList()
 
@@ -204,5 +209,31 @@ class ExcerSizeActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
     private fun speakOut(text: String) {
         tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "")
+    }
+     override fun  onBackPressed(){
+
+    }
+    private fun customDialogForBackButton() {
+        val customDialog = Dialog(this)
+        //Todo 3: create a binding variable
+        val dialogBinding = DialogCustomBackConfirmationBinding.inflate(layoutInflater)
+        /*Set the screen content from a layout resource.
+         The resource will be inflated, adding all top-level views to the screen.*/
+        //Todo 4: bind to the dialog
+        customDialog.setContentView(dialogBinding.root)
+        //Todo 5: to ensure that the user clicks one of the button and that the dialog is
+        //not dismissed when surrounding parts of the screen is clicked
+        customDialog.setCanceledOnTouchOutside(false)
+        dialogBinding.tvYes.setOnClickListener {
+            //Todo 6 We need to specify that we are finishing this activity if not the player
+            // continues beeping even after the screen is not visibile
+            this@ExcerSizeActivity.finish()
+            customDialog.dismiss() // Dialog will be dismissed
+        }
+        dialogBinding.tvNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+        //Start the dialog and display it on screen.
+        customDialog.show()
     }
 }
