@@ -10,9 +10,6 @@ abstract class HistoryDatabase:RoomDatabase(){
 
     abstract fun historyDao():HistoryDao
 
-    /**
-     * Define a companion object, this allows us to add functions on the HistoryDatabase class.
-     */
     companion object {
         /**
          * INSTANCE will keep a reference to any database returned via getInstance.
